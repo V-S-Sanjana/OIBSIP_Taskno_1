@@ -1,98 +1,100 @@
 package sanjana_177;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-public class NumberGuess extends JFrame {
-    private int target;
-    private int attempts;
+public class UniqueNumberGuess extends JFrame {
+    private int targetNumber;
+    private int numAttempts;
     private int maxAttempts;
     private int previousGuess = -1;
 
-    private JTextField inputField;
-    private JButton guessButton;
-    private JLabel messageLabel;
-    private JLabel attemptsLabel;
-    private JLabel previousGuessLabel;
+    private JTextField guessInputField;
+    private JButton submitGuessButton;
+    private JLabel resultMessageLabel;
+    private JLabel attemptsLeftLabel;
+    private JLabel previousGuessInfoLabel;
 
-    public NumberGuess() {
-        setTitle("Guess the Number");
+    public UniqueNumberGuess() {
+        setTitle("Number Guessing Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(350, 200);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
         Random random = new Random();
-        target = random.nextInt(100) + 1; 
-        attempts = 0;
+        targetNumber = random.nextInt(100) + 1;
+        numAttempts = 0;
         maxAttempts = 10;
 
-        JLabel titleLabel = new JLabel("Guess the Number (1 - 100)");
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        add(titleLabel, BorderLayout.NORTH);
+        JLabel gameTitleLabel = new JLabel("Guess the Mystery Number (1 - 100)");
+        gameTitleLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(gameTitleLabel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new GridLayout(3, 1));
-        previousGuessLabel = new JLabel("Previous Guess: ");
-        centerPanel.add(previousGuessLabel);
+        previousGuessInfoLabel = new JLabel("Previous Attempt: ");
+        centerPanel.add(previousGuessInfoLabel);
 
-        messageLabel = new JLabel("Enter your guess:");
-        centerPanel.add(messageLabel);
+        resultMessageLabel = new JLabel("Enter your guess:");
+        centerPanel.add(resultMessageLabel);
 
-        inputField = new JTextField();
-        inputField.addActionListener(new GuessListener());
-        centerPanel.add(inputField);
+        guessInputField = new JTextField();
+        guessInputField.addActionListener(new GuessSubmitListener());
+        centerPanel.add(guessInputField);
 
         add(centerPanel, BorderLayout.CENTER);
 
-        guessButton = new JButton("Guess");
-        guessButton.addActionListener(new GuessListener());
-        add(guessButton, BorderLayout.SOUTH);
+        submitGuessButton = new JButton("Submit Guess");
+        submitGuessButton.addActionListener(new GuessSubmitListener());
+        add(submitGuessButton, BorderLayout.SOUTH);
 
-        attemptsLabel = new JLabel("Attempts left: " + (maxAttempts - attempts));
-        attemptsLabel.setHorizontalAlignment(JLabel.CENTER);
-        add(attemptsLabel, BorderLayout.EAST);
+        attemptsLeftLabel = new JLabel("Attempts Remaining: " + (maxAttempts - numAttempts));
+        attemptsLeftLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(attemptsLeftLabel, BorderLayout.EAST);
 
         setVisible(true);
     }
 
-    private class GuessListener implements ActionListener {
+    private class GuessSubmitListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            int guess;
+            int userGuess;
             try {
-                guess = Integer.parseInt(inputField.getText());
+                userGuess = Integer.parseInt(guessInputField.getText());
             } catch (NumberFormatException ex) {
-                messageLabel.setText("Invalid input. Enter a valid number.");
+                resultMessageLabel.setText("Invalid input. Please enter a valid number.");
                 return;
             }
 
-            previousGuess = guess;
-            attempts++;
-            attemptsLabel.setText("Attempts left: " + (maxAttempts - attempts));
-            previousGuessLabel.setText("Previous Guess: " + previousGuess);
+            previousGuess = userGuess;
+            numAttempts++;
+            attemptsLeftLabel.setText("Attempts Remaining: " + (maxAttempts - numAttempts));
+            previousGuessInfoLabel.setText("Previous Attempt: " + previousGuess);
 
-            if (guess == target) {
-                messageLabel.setText("Congratulations! You guessed the correct number in " + attempts + " attempts.");
-                guessButton.setEnabled(false);
-            } else if (attempts >= maxAttempts) {
-                messageLabel.setText("Sorry, you've run out of attempts. The correct number was: " + target);
-                guessButton.setEnabled(false);
+            if (userGuess == targetNumber) {
+                resultMessageLabel.setText("Congratulations! You've guessed the correct number in " + numAttempts + " attempts.");
+                submitGuessButton.setEnabled(false);
+            } else if (numAttempts >= maxAttempts) {
+                resultMessageLabel.setText("Sorry, you've exhausted your attempts. The correct number was: " + targetNumber);
+                submitGuessButton.setEnabled(false);
             } else {
-                if (guess < target) {
-                    messageLabel.setText("Your guess is low. Try again.");
+                if (userGuess < targetNumber) {
+                    resultMessageLabel.setText("Your guess is low. Try again.");
                 } else {
-                    messageLabel.setText("Your guess is high. Try again.");
+                    resultMessageLabel.setText("Your guess is high. Try again.");
                 }
             }
 
-            inputField.setText(""); 
-            inputField.requestFocusInWindow();
+            guessInputField.setText("");
+            guessInputField.requestFocusInWindow();
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(NumberGuess::new);
+        SwingUtilities.invokeLater(UniqueNumberGuess::new);
     }
 }
+
