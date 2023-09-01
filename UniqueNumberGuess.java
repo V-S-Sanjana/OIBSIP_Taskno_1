@@ -21,7 +21,7 @@ public class UniqueNumberGuess extends JFrame {
     public UniqueNumberGuess() {
         setTitle("Number Guessing Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(350, 200);
+        setSize(550, 250);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
